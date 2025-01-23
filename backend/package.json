@@ -3,8 +3,21 @@
   "version": "1.0.0",
   "description": "This is Banckend Ecommerce project for my anzamh portfolio",
   "main": "server.js",
+  "type": "module",
   "repository": "https://github.com/amzamulh/anzamh-ecom.git",
   "author": "Md Amzamul Haque",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "check-format": "prettier --check .",
+    "fix": "eslint --fix ."
+  },
+  "devDependencies": {
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "prettier": "^3.4.2"
+  }
 }

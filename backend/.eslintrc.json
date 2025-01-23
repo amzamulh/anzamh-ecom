@@ -1,0 +1,25 @@
+{
+    "root": true,
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:node/recommended",
+      "plugin:prettier/recommended"
+    ],
+    "plugins": ["prettier"],
+    "rules": {
+      "prettier/prettier": ["error", { "endOfLine": "auto" }],
+      "no-console": "warn", 
+      "eqeqeq": "error", 
+      "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+      "node/no-unsupported-features/es-syntax": "off"
+    },
+    "env": {
+      "node": true,
+      "es6": true
+    }
+  }
+  
