@@ -1,0 +1,10 @@
+{
+  "name": "@ah_ecom/backend",
+  "version": "1.0.0",
+  "description": "This is Banckend Ecommerce project for my anzamh portfolio",
+  "main": "server.js",
+  "repository": "https://github.com/amzamulh/anzamh-ecom.git",
+  "author": "Md Amzamul Haque",
+  "license": "MIT",
+  "private": true
+}
