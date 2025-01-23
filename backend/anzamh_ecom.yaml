@@ -1,0 +1,13 @@
+openapi: 3.0.1
+info:
+  title: AnzamH Ecommerce web app
+  version: 1.0.0
+  contact:
+    name: Md Amzamul Haque
+    email: amzamulh@gmail.com
+    url: https://www.anzamh.com
+servers:
+  - description: Dev
+    url: http://localhost:4000
+  - description: Prod
+    url: http://localhost:3000
