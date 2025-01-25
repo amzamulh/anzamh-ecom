@@ -11,3 +11,2233 @@ servers:
     url: http://localhost:4000
   - description: Prod
     url: http://localhost:3000
+tags:
+  - name: Auth
+    description: Get all Authenticated Endpoints
+  - name: Users
+    description: Get All Users Endpoints
+  - name: Products
+    description: Get All Products Endpoints
+  - name: Categories
+    description: Get All Categories Endpoints
+  - name: Carts
+    description: Get All Carts Endpoints
+  - name: Orders
+    description: Get All Orders Endpoints
+  - name: Comments
+    description: Get All Comments Endpoints
+  - name: Reviews
+    description: Get All Reviews Endpoints
+  - name: Payments
+    description: Get All Payments Endpoints
+paths:
+  '/api/v1/auth/register':
+    post:
+      tags:
+        - Auth
+      summary: Create New Users
+      requestBody:
+        description: Create New Users
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: Amzamul
+                lastName:
+                  type: string
+                  example: Haque
+                userName:
+                  type: string
+                  example: amzamh
+                phoneNumber:
+                  type: number
+                  example: 0172145487
+                email:
+                  type: string
+                  format: email
+                  example: amzamulh@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: 12345$#%
+                confirm_password:
+                  type: string
+                  format: password
+                  example: 12345$#%
+              required: [user_name, emal, password, confirm_password]
+      responses:
+        '201':
+          description: User Create Data
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyCreatedMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/UserGetSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+
+                  links:
+                    type: object
+                    properties:
+                      owner:
+                        type: string
+                        format: url
+                        example: /api/v1/auth/register
+                      login:
+                        type: string
+                        format: url
+                        example: /api/v1/auth/login
+                      dashboard:
+                        type: string
+                        format: url
+                        example: /api/v1/user/dashboard
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/api/v1/auth/login':
+    post:
+      tags:
+        - Auth
+      summary: User login Successfully
+      requestBody:
+        description: User Login Successfully
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                userOrEmail:
+                  type: string
+                  example: AnzamH || anzamulh@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: 12345@#$
+      responses:
+        '201':
+          description: Show user data which is created
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyCreatedMessageInfo'
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        example: amzamulh@gmail.com
+                  links:
+                    type: object
+                    properties:
+                      owner:
+                        type: string
+                        format: url
+                        example: /api/v1/auth/login
+                      register:
+                        type: string
+                        format: url
+                        example: /api/v1/auth/register
+                      dashboard:
+                        type: string
+                        format: url
+                        example: /api/v1/user/dashboard
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/api/v1/users':
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Get All Users
+      parameters:
+        - $ref: '#/components/parameters/pageQuery'
+        - $ref: '#/components/parameters/limitQuery'
+        - $ref: '#/components/parameters/sortTypeQuery'
+        - $ref: '#/components/parameters/sortKeyQuery'
+        - $ref: '#/components/parameters/searchQuery'
+      responses:
+        '200':
+          description: get all users
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetAllMessageInfo'
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                        - $ref: '#/components/schemas/UserGetSchemaOtp'
+                        - $ref: '#/components/schemas/TimeStamps'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/users
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Create Users
+      requestBody:
+        description: Create New Users
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/UserCreatedSchemaOtp'
+      responses:
+        '201':
+          description: New user Created
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyCreatedMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/UserGetSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/users
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/api/v1/users/:id':
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Get Single Users
+      responses:
+        '200':
+          description: get single users
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetSingleMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/UserGetSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/users/1
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: User Updated Successfully
+      requestBody:
+        description: Updated  Users
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/UserCreatedSchemaOtp'
+      responses:
+        '201':
+          description: user Created Updated
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyUpdateMessageInfo'
+                  data:
+                    type: object
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/users/1
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: User Delete Successfully
+      responses:
+        '204':
+          description: User Deleted Successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyDeletedMessageInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/api/v1/products':
+    get:
+      tags:
+        - Products
+      summary: Get All products
+      parameters:
+        - $ref: '#/components/parameters/pageQuery'
+        - $ref: '#/components/parameters/limitQuery'
+        - $ref: '#/components/parameters/sortTypeQuery'
+        - $ref: '#/components/parameters/sortKeyQuery'
+        - $ref: '#/components/parameters/searchQuery'
+      responses:
+        '200':
+          description: get all products
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetAllMessageInfo'
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                        - $ref: '#/components/schemas/ProductGetSchemaOtp'
+                        - $ref: '#/components/schemas/TimeStamps'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/products
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Create products
+      requestBody:
+        description: Create New products
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/ProductCreatedSchemaOtp'
+      responses:
+        '201':
+          description: New Products Created
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyCreatedMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/ProductGetSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/products
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/api/v1/products/:id':
+    get:
+      tags:
+        - Products
+      summary: Get Single products
+      responses:
+        '200':
+          description: get single products
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetSingleMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/ProductGetSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/products/1
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Products Updated Successfully
+      requestBody:
+        description: Updated  products
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/ProductCreatedSchemaOtp'
+      responses:
+        '201':
+          description: Product Updated
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyUpdateMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/ProductGetSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/products/1
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Products Delete Successfully
+      responses:
+        '204':
+          description: Products Deleted Successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyDeletedMessageInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/api/v1/categories':
+    get:
+      tags:
+        - Categories
+      summary: Get All Categories
+      parameters:
+        - $ref: '#/components/parameters/pageQuery'
+        - $ref: '#/components/parameters/limitQuery'
+        - $ref: '#/components/parameters/sortTypeQuery'
+        - $ref: '#/components/parameters/sortKeyQuery'
+        - $ref: '#/components/parameters/searchQuery'
+      responses:
+        '200':
+          description: get all Categories
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetAllMessageInfo'
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                        - $ref: '#/components/schemas/CategorySchemaOtp'
+                        - $ref: '#/components/schemas/TimeStamps'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/categories
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Categories
+      summary: Create Categories
+      requestBody:
+        description: Create New Categories
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CategorySchemaOtp'
+      responses:
+        '201':
+          description: New Categories Created
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyCreatedMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/CategorySchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/categories
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/api/v1/categories/:id':
+    get:
+      tags:
+        - Categories
+      summary: Get Single Categories
+      responses:
+        '200':
+          description: get single Categories
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetSingleMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/CategorySchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/categories/1
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Categories
+      summary: Categories Updated Successfully
+      requestBody:
+        description: Updated  Categories
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CategorySchemaOtp'
+      responses:
+        '201':
+          description: Product Updated
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyUpdateMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/CategorySchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/categories/1
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Categories
+      summary: Categories Delete Successfully
+      responses:
+        '204':
+          description: Categories Deleted Successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyDeletedMessageInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/api/v1/carts':
+    get:
+      tags:
+        - Carts
+      summary: Get All Carts
+      parameters:
+        - $ref: '#/components/parameters/pageQuery'
+        - $ref: '#/components/parameters/limitQuery'
+        - $ref: '#/components/parameters/sortTypeQuery'
+        - $ref: '#/components/parameters/sortKeyQuery'
+        - $ref: '#/components/parameters/searchQuery'
+      responses:
+        '200':
+          description: get all Carts
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetAllMessageInfo'
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                        - $ref: '#/components/schemas/CartSchemaOtp'
+                        - $ref: '#/components/schemas/TimeStamps'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/carts
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - Carts
+      summary: Create Carts
+      requestBody:
+        description: Create New Carts
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CartSchemaOtp'
+      responses:
+        '201':
+          description: New Carts Created
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyCreatedMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/CartSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/carts
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/api/v1/carts/:id':
+    get:
+      tags:
+        - Carts
+      summary: Get Single Carts
+      responses:
+        '200':
+          description: get single Carts
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetSingleMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/CartSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/carts/1
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Carts
+      summary: Carts Updated Successfully
+      requestBody:
+        description: Updated  Carts
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CartSchemaOtp'
+      responses:
+        '201':
+          description: Carts Updated
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyUpdateMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/CartSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/Carts/1
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - Carts
+      summary: Carts Delete Successfully
+      responses:
+        '204':
+          description: Carts Deleted Successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyDeletedMessageInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/api/v1/orders':
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Orders
+      summary: Get All Orders
+      parameters:
+        - $ref: '#/components/parameters/pageQuery'
+        - $ref: '#/components/parameters/limitQuery'
+        - $ref: '#/components/parameters/sortTypeQuery'
+        - $ref: '#/components/parameters/sortKeyQuery'
+        - $ref: '#/components/parameters/searchQuery'
+      responses:
+        '200':
+          description: get all Orders
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetAllMessageInfo'
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                        - $ref: '#/components/schemas/OrderSchemaOtp'
+                        - $ref: '#/components/schemas/TimeStamps'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/orders
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Orders
+      summary: Create Orders
+      requestBody:
+        description: Create New Orders
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/OrderSchemaOtp'
+      responses:
+        '201':
+          description: New Orders Created
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyCreatedMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/OrderSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/Orders
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/api/v1/orders/:id':
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Orders
+      summary: Get Single Orders
+      responses:
+        '200':
+          description: get single Orders
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetSingleMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/OrderSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/orders/1
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Orders
+      summary: Orders Updated Successfully
+      requestBody:
+        description: Updated  Orders
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CartSchemaOtp'
+      responses:
+        '201':
+          description: Orders Updated
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyUpdateMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/OrderSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/Orders/1
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - bearerAuth: []
+
+      tags:
+        - Orders
+      summary: Orders Delete Successfully
+      responses:
+        '204':
+          description: Orders Deleted Successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyDeletedMessageInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/api/v1/comments':
+    get:
+      tags:
+        - Comments
+      summary: Get All Comments
+      parameters:
+        - $ref: '#/components/parameters/pageQuery'
+        - $ref: '#/components/parameters/limitQuery'
+        - $ref: '#/components/parameters/sortTypeQuery'
+        - $ref: '#/components/parameters/sortKeyQuery'
+        - $ref: '#/components/parameters/searchQuery'
+      responses:
+        '200':
+          description: get all Comments
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetAllMessageInfo'
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                        - $ref: '#/components/schemas/CommentSchemaOtp'
+                        - $ref: '#/components/schemas/TimeStamps'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/comments
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comments
+      summary: Create Comments
+      requestBody:
+        description: Create New Comments
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CommentSchemaOtp'
+      responses:
+        '201':
+          description: New Comments Created
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyCreatedMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/CommentSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/comments
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/api/v1/comments/:id':
+    get:
+      tags:
+        - Comments
+      summary: Get Single Comments
+      responses:
+        '200':
+          description: get single Comments
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetSingleMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/CommentSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/comments/1
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security:
+        - bearerAuth: []
+
+      tags:
+        - Comments
+      summary: Comments Updated Successfully
+      requestBody:
+        description: Updated  Comments
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CommentSchemaOtp'
+      responses:
+        '201':
+          description: Comments Updated
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyUpdateMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/CommentSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/comments/1
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - bearerAuth: []
+
+      tags:
+        - Comments
+      summary: Comments Delete Successfully
+      responses:
+        '204':
+          description: Comments Deleted Successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyDeletedMessageInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/api/v1/reviews':
+    get:
+      tags:
+        - Reviews
+      summary: Get All Reviews
+      parameters:
+        - $ref: '#/components/parameters/pageQuery'
+        - $ref: '#/components/parameters/limitQuery'
+        - $ref: '#/components/parameters/sortTypeQuery'
+        - $ref: '#/components/parameters/sortKeyQuery'
+        - $ref: '#/components/parameters/searchQuery'
+      responses:
+        '200':
+          description: get all Reviews
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetAllMessageInfo'
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                        - $ref: '#/components/schemas/ReviewSchemaOtp'
+                        - $ref: '#/components/schemas/TimeStamps'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/reviews
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+
+      tags:
+        - Reviews
+      summary: Create Reviews
+      requestBody:
+        description: Create New Reviews
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/ReviewSchemaOtp'
+      responses:
+        '201':
+          description: New Reviews Created
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyCreatedMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/ReviewSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/reviews
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/api/v1/reviews/:id':
+    get:
+      tags:
+        - Reviews
+      summary: Get Single Reviews
+      responses:
+        '200':
+          description: get single Reviews
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetSingleMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/ReviewSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/reviews/1
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reviews
+      summary: Reviews Updated Successfully
+      requestBody:
+        description: Updated  Reviews
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/ReviewSchemaOtp'
+      responses:
+        '201':
+          description: Reviews Updated
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyUpdateMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/ReviewSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/reviews/1
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - bearerAuth: []
+
+      tags:
+        - Reviews
+      summary: Reviews Delete Successfully
+      responses:
+        '204':
+          description: Reviews Deleted Successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyDeletedMessageInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/api/v1/payments':
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Payments
+      summary: Get All Payments
+      parameters:
+        - $ref: '#/components/parameters/pageQuery'
+        - $ref: '#/components/parameters/limitQuery'
+        - $ref: '#/components/parameters/sortTypeQuery'
+        - $ref: '#/components/parameters/sortKeyQuery'
+        - $ref: '#/components/parameters/searchQuery'
+      responses:
+        '200':
+          description: get all Payments
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetAllMessageInfo'
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                        - $ref: '#/components/schemas/PaymentSchemaOtp'
+                        - $ref: '#/components/schemas/TimeStamps'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/Payments
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Payments
+      summary: Create Payments
+      requestBody:
+        description: Create New Payments
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/PaymentSchemaOtp'
+      responses:
+        '201':
+          description: New Payments Created
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyCreatedMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/PaymentSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/payments
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/api/v1/payments/:id':
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Payments
+      summary: Get Single Payments
+      responses:
+        '200':
+          description: get single Payments
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyGetSingleMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/PaymentSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/payments/1
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Payments
+      summary: Payments Updated Successfully
+      requestBody:
+        description: Updated  Payments
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CommentSchemaOtp'
+      responses:
+        '201':
+          description: Payments Updated
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyUpdateMessageInfo'
+                  data:
+                    allOf:
+                      - type: object
+                      - $ref: '#/components/schemas/PaymentSchemaOtp'
+                      - $ref: '#/components/schemas/TimeStamps'
+                  links:
+                    type: object
+                    properties:
+                      own:
+                        type: string
+                        format: url
+                        example: /api/v1/payments/1
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Payments
+      summary: Payments Delete Successfully
+      responses:
+        '204':
+          description: Payments Deleted Successfully
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/SuccessFullyDeletedMessageInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserCreatedSchemaOtp:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Amzamul
+        lastName:
+          type: string
+          example: Haque
+        userName:
+          type: string
+          example: Amzam
+        phoneNumber:
+          type: number
+          example: 0124875451
+        email:
+          type: string
+          format: email
+          example: amzamulh@gmail.com
+        password:
+          type: string
+          format: password
+          example: 12345@#$
+        confirmPassword:
+          type: string
+          format: password
+          example: 12345@#$
+        roles:
+          type: object
+          properties:
+            name:
+              type: string
+              example: user
+        avater:
+          type: string
+          example: image link
+        address:
+          type: object
+          properties:
+            address:
+              type: string
+              example: Jatrabari, Dhaka-1236
+            city:
+              type: string
+              example: Dhaka
+            state:
+              type: string
+              example: Dhaka
+            coountry:
+              type: string
+              example: Bangladesh
+            postalCode:
+              type: string
+              example: 1236
+        status:
+          type: string
+          enum: ['Pending', 'Approved', 'Rejected']
+          example: Pending
+    UserGetSchemaOtp:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Amzamul
+        lastName:
+          type: string
+          example: Haque
+        fullName:
+          type: string
+          example: Amzamul Haque
+        userName:
+          type: string
+          example: amzamh
+        email:
+          type: string
+          format: email
+          example: amzamulh@gmail.com
+        phoneNumber:
+          type: number
+          example: 0172145487
+        status:
+          type: string
+          enum: ['Pending', 'Approved', 'Rejected']
+          example: Pending
+        roles:
+          type: object
+          properties:
+            name:
+              type: string
+              example: user
+            permissions:
+              type: object
+              properties:
+                read:
+                  type: string
+                  example: Profile:read
+                write:
+                  type: string
+                  example: Profile:write
+            inarites:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Article
+
+        avater:
+          type: string
+          example: null
+        emailVrifiedAt:
+          type: string
+          enum:
+            - true
+            - false
+          example: false
+        address:
+          type: object
+          properties:
+            address:
+              type: string
+              example: Jatrabari, Dhaka-1236
+            city:
+              type: string
+              example: Dhaka
+            state:
+              type: string
+              example: Dhaka
+            coountry:
+              type: string
+              example: Bangladesh
+            postalCode:
+              type: string
+              example: 1236
+    ProductCreatedSchemaOtp:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Mens Panjabi
+        descriptions:
+          type: string
+          example: It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        price:
+          type: number
+          example: 8000
+        descountPrice:
+          type: number
+          example: 7500
+        stock:
+          type: string
+          example: 1000AP
+        category:
+          type: object
+          properties:
+            men:
+              type: string
+              example: Men
+            punjabi:
+              type: string
+              example: Men's Punjabi
+        image:
+          type: string
+          format: image
+          example: 'img/men/punjabi.jpg'
+        status:
+          type: string
+          enum: ['Pending', 'Publish', 'Unpublish']
+          example: 'Unpublish'
+    ProductGetSchemaOtp:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Mens Panjabi
+        descriptions:
+          type: string
+          example: It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        price:
+          type: number
+          example: 8000
+        descountPrice:
+          type: number
+          example: 7500
+        stock:
+          type: string
+          example: 1000AP
+        category:
+          type: object
+          properties:
+            men:
+              type: string
+              example: Men
+            punjabi:
+              type: string
+              example: Men's Punjabi
+        image:
+          type: string
+          format: image
+          example: 'img/men/punjabi.jpg'
+        ratings:
+          type: number
+          example: 1
+        count:
+          type: number
+          example: 0
+        status:
+          type: string
+          enum: ['Pending', 'Publish', 'Unpublish']
+          example: 'Unpublish'
+        isAvailable:
+          type: string
+          enum:
+            - true
+            - false
+          example: true
+        createdBy:
+          type: string
+          example: Editor
+    CategorySchemaOtp:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Men
+      required:
+        - name
+    CartSchemaOtp:
+      type: object
+      properties:
+        user:
+          type: string
+          example: user
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                example: Mens punjabi
+              quantity:
+                type: number
+                example: 2
+        totalPrice:
+          type: number
+          example: 15000
+
+    OrderSchemaOtp:
+      type: object
+      properties:
+        user:
+          type: string
+          example: user
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                example: Mens punjabi
+              quantity:
+                type: number
+                example: 2
+        totalPrice:
+          type: number
+          example: 15000
+        status:
+          type: string
+          enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
+        paymentMethod:
+          type: string
+          example: cash
+        paymentStatus:
+          type: string
+          enum: ['Paid', 'Unpaid']
+          example: Unpaid
+        shippingAddress:
+          type: object
+          properties:
+            address:
+              type: string
+              example: Jatrabari, Dhaka-1236
+            city:
+              type: string
+              example: Dhaka
+            state:
+              type: string
+              example: Dhaka
+            coountry:
+              type: string
+              example: Bangladesh
+            postalCode:
+              type: string
+              example: 1236
+    PaymentSchemaOtp:
+      type: object
+      properties:
+        orderId:
+          type: string
+          example: 'orderone-kjfsejf'
+        paymentMethod:
+          type: string
+          example: cash
+        status:
+          type: string
+          enum: ['Pending', 'Complated', 'Failed']
+          example: Pending
+        transectionId:
+          type: string
+          example: 12321fdiodfewe
+        totalAmount:
+          type: number
+          example: 150000
+
+    ReviewSchemaOtp:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: userId
+        productId:
+          type: string
+          example: productId
+        ratings:
+          type: number
+          example: 2
+        comment:
+          type: string
+          example: This is good Products
+    CommentSchemaOtp:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: userId
+        productId:
+          type: string
+          example: productId
+        comment:
+          type: string
+          example: This Product is good.
+
+    TimeStamps:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    # Pagiaation Schema
+    Pagination:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          format: int32
+          example: 2
+        limit:
+          type: integer
+          format: int32
+          example: 10
+        totalItmes:
+          type: integer
+          format: int32
+          example: 20
+        totalPage:
+          type: integer
+          format: int32
+          example: 5
+        prevPage:
+          type: integer
+          format: int32
+          example: 1
+        nextPage:
+          type: integer
+          format: int32
+          example: 3
+      required: ['currentPage', 'limit', 'totalItmes', 'totalPage', 'prevPage', 'nextPage']
+
+    SuccessFullyGetAllMessageInfo:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Get all data Successfully
+    SuccessFullyGetSingleMessageInfo:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Get Single Data Successfully
+    SuccessFullyCreatedMessageInfo:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: Data Created Successfully
+    SuccessFullyUpdateMessageInfo:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Data Updated Successfully
+    SuccessFullyDeletedMessageInfo:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 204
+        message:
+          type: string
+          example: Data Deleted Successfully
+
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                format: int32
+                example: 400
+              errors:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: Bad Request
+                  message:
+                    type: string
+                    example: Bad Request
+    '401':
+      description: Unauthorized Request
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                format: int32
+                example: 401
+              errors:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: Unauthorized
+                  message:
+                    type: string
+                    example: You are not authorized for this request
+    '403':
+      description: Forbidden Request
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                format: int32
+                example: 403
+              errors:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: Forbidden
+                  message:
+                    type: string
+                    example: Data field is required
+    '404':
+      description: Not Found Request.
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                format: int32
+                example: 404
+              errors:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: Not Found
+                  message:
+                    type: string
+                    example: Data Not Found
+    '500':
+      description: Internal Server Error Request
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                format: int32
+                example: 500
+              errors:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: Internal Server Error
+                  message:
+                    type: string
+                    example: Internal Server Error
+  parameters:
+    pathId:
+      in: query
+      name: id
+      description: Get By Id
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 1
+    # Pagination and filtering params
+    pageQuery:
+      in: query
+      name: page
+      description: Page
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 2
+    limitQuery:
+      in: query
+      name: limit
+      description: Limit
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 10
+    sortTypeQuery:
+      in: query
+      name: sort_type
+      description: Sort Type Query
+      schema:
+        type: string
+        enum: [asc, dsc]
+        example: 'dsc'
+    sortKeyQuery:
+      in: query
+      name: sort_key
+      description: Sort Key Query
+      schema:
+        type: string
+        enum: ['createdAt', 'updatedAt']
+        example: 'updatedAt'
+    searchQuery:
+      in: query
+      name: search
+      description: Search Query
+      schema:
+        type: string
