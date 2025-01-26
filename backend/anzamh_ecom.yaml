@@ -1818,7 +1818,6 @@ components:
               example: Men's Punjabi
         image:
           type: string
-          format: image
           example: 'img/men/punjabi.jpg'
         status:
           type: string
@@ -1853,7 +1852,6 @@ components:
               example: Men's Punjabi
         image:
           type: string
-          format: image
           example: 'img/men/punjabi.jpg'
         ratings:
           type: number

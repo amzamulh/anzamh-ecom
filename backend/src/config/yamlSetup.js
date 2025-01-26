@@ -3,7 +3,6 @@ import swaggerUI from 'swagger-ui-express';
 import OpenApiValidator from 'express-openapi-validator';
 
 const yamlPath = './anzamh_ecom.yaml';
-console.log(yamlPath);
 
 const yamlConnect = (app) => {
   try {
