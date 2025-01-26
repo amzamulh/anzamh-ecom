@@ -2,7 +2,7 @@ import http from 'http';
 import app from './app.js';
 import { PORT, SERVER_URI, DB_LOCAL_URI } from './config/secret.js';
 import yamlConnect from './config/yamlSetup.js';
-import connectionMongoDB from './config/dbConnect.js';
+import connectionMongoDB from './db_connect/dbConnect.js';
 
 yamlConnect(app);
 
